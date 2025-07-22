@@ -1,4 +1,5 @@
 import streamlit as st
+st.cache_data.clear()
 from ai_job_data import AIJobData
 from ai_job_visuals import AIJobVisualizations
 
