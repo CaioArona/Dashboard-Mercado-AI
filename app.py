@@ -4,7 +4,6 @@ import requests
 from ai_job_data import AIJobData
 from ai_job_visuals import AIJobVisualizations
 
-# --- FUNÇÃO PARA BUSCAR VAGAS NA API ---
 @st.cache_data(show_spinner=False)
 def buscar_vagas(query="data science", location="brazil", pages=1):
     url = "https://jsearch.p.rapidapi.com/search"
@@ -35,11 +34,9 @@ def buscar_vagas(query="data science", location="brazil", pages=1):
         st.error(f"Erro ao acessar a API: {response.status_code}")
         return pd.DataFrame()
 
-# --- CONFIG GERAL ---
 st.set_page_config(page_title="Dashboard de Vagas em IA", layout="wide")
 st.title("🚀 Dashboard de Análise de Mercado de Vagas em Inteligência Artificial")
 
-# --- DADOS ESTÁTICOS (CSV) ---
 dados = AIJobData('ai_job_dataset.csv')
 
 st.sidebar.header("Filtros")
@@ -49,7 +46,6 @@ pais_escolhido = st.sidebar.selectbox('Selecione o país', options=['Todos'] + p
 df_filtrado = dados.filtrar_por_pais(pais_escolhido)
 viz = AIJobVisualizations(df_filtrado)
 
-# --- VISUALIZAÇÕES DO CSV ---
 st.markdown(f"## 📊 Visão Geral ({pais_escolhido})")
 
 col1, col2, col3 = st.columns(3)
@@ -79,7 +75,6 @@ st.pyplot(viz.grafico_skills_clusters(pais_escolhido))
 
 st.markdown("---")
 
-# --- NOVA SESSÃO: VAGAS EM TEMPO REAL ---
 st.markdown("## 🌍 Vagas em Tempo Real (API)")
 
 with st.expander("🔍 Buscar vagas ao vivo"):
@@ -96,7 +91,6 @@ with st.expander("🔍 Buscar vagas ao vivo"):
             st.success(f"{len(df_vagas)} vagas encontradas.")
             st.dataframe(df_vagas)
 
-            # Gráfico de crescimento diário
             st.subheader("📈 Publicações por Dia")
             df_vagas['data'] = df_vagas['job_posted_at_datetime_utc'].dt.date
             vagas_dia = df_vagas.groupby('data').size()
